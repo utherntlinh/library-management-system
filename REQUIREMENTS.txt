@@ -1,0 +1,47 @@
+# System Requirements for Library Management System
+
+## Windows Build Requirements
+- Windows 10/11 64-bit
+- Visual Studio 2019 or later
+- MSVC C++ compiler (v142 or later)
+- C++14 standard support
+
+## Runtime Requirements (Local)
+- Windows OS
+- At least 100MB free disk space
+- 512MB RAM
+
+## Docker Requirements
+- Docker Desktop for Windows
+- 4GB RAM allocated to Docker
+- 10GB free disk space
+- Windows containers enabled
+
+## Development Tools
+- Visual Studio 2019 Community/Professional/Enterprise
+- Git for version control
+- Optional: Visual Studio Code for quick edits
+
+## Building Instructions
+
+### Local Build (Windows)
+1. Visual Studio 2019+ installed
+2. Open LibraryManagementSystem.sln
+3. Select Release configuration
+4. Build Solution (Ctrl+Shift+B)
+
+### Docker Build
+1. Docker Desktop installed and running
+2. Run: docker-compose up --build
+3. Build will create Windows Server Core based image
+
+## Deployment
+
+### Local Deployment
+- Run the built .exe file directly
+- Database creates automatically at runtime
+
+### Docker Deployment
+- Use docker-compose.yml for orchestration
+- Database persists in named volume: library-data
+- Access application via port 5000

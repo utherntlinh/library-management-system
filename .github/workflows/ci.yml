@@ -1,0 +1,53 @@
+name: CI - Build & Test
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        configuration: [Release]
+        platform: [x64]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
+    - name: Restore NuGet packages
+      run: nuget restore LibraryManagementSystem.sln
+      continue-on-error: true
+
+    - name: Build project
+      run: msbuild LibraryManagementSystem.sln /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }} /m
+
+    - name: Check build output
+      run: |
+        if (Test-Path "x64\${{ matrix.configuration }}\LibraryManagementSystem.exe") {
+          Write-Host "? Build successful!"
+          Get-Item "x64\${{ matrix.configuration }}\LibraryManagementSystem.exe" | Format-List
+        } else {
+          Write-Host "? Build failed - executable not found"
+          Get-ChildItem -Recurse -Filter "*.exe" | Select-Object FullName
+          exit 1
+        }
+      shell: pwsh
+
+    - name: Upload artifacts
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: LibraryManagementSystem-${{ matrix.configuration }}-${{ matrix.platform }}
+        path: x64/${{ matrix.configuration }}/LibraryManagementSystem.exe
+        retention-days: 30

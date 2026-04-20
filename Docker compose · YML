@@ -1,0 +1,16 @@
+version: '3.8'
+ 
+services:
+  library:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    container_name: library-management
+    image: library-management-system
+    stdin_open: true   # -i (interactive input)
+    tty: true          # -t (terminal output)
+    volumes:
+      - library_data:/app/data
+ 
+volumes:
+  library_data:

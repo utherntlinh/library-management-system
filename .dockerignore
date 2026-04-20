@@ -1,0 +1,32 @@
+# Visual Studio files
+.vs/
+.vscode/
+Debug/
+Release/
+x64/
+x86/
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.lib
+*.exp
+
+# Git files
+.git/
+.gitignore
+
+# Database files
+*.db
+LibraryManagement.db
+
+# Build files
+*.sln.DotSettings
+*.user
+*.aps
+*.ncb
+*.vcxproj.filters
+
+# OS files
+.DS_Store
+Thumbs.db
