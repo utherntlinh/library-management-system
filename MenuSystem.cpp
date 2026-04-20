@@ -8,6 +8,12 @@
 
 using namespace std;
 
+#ifdef _WIN32
+#define safe_localtime(tm_ptr, time_ptr) localtime_s(tm_ptr, time_ptr)
+#else
+#define safe_localtime(tm_ptr, time_ptr) ({ struct tm* _r = localtime_r(time_ptr, tm_ptr); (void)_r; })
+#endif
+
 MenuSystem::MenuSystem(std::shared_ptr<DatabaseManager> db)
     : dbManager(db) {
     authManager = std::make_shared<AuthenticationManager>(db);
@@ -94,7 +100,7 @@ void MenuSystem::LibrarianMenu() {
 
         time_t nowT = time(nullptr);
         struct tm tmT = {};
-        localtime_s(&tmT, &nowT);
+        safe_localtime(&tmT, &nowT);
         std::ostringstream ossT;
         ossT << std::put_time(&tmT, "%Y-%m-%d");
         std::string todayStr = ossT.str();
@@ -153,7 +159,7 @@ void MenuSystem::MemberMenu() {
         int borrowed = 0, overdue = 0;
         time_t nowT = time(nullptr);
         struct tm tmT = {};
-        localtime_s(&tmT, &nowT);
+        safe_localtime(&tmT, &nowT);
         std::ostringstream ossT;
         ossT << std::put_time(&tmT, "%Y-%m-%d");
         std::string todayStr = ossT.str();
@@ -384,7 +390,7 @@ void MenuSystem::ManageMembers() {
 
             time_t now = time(nullptr);
             tm timeinfo = {};
-            localtime_s(&timeinfo, &now);
+            safe_localtime(&timeinfo, &now);
             timeinfo.tm_year += 1;
             mktime(&timeinfo);
             std::ostringstream ds;
@@ -594,7 +600,7 @@ void MenuSystem::ViewMyLoans() {
 
     time_t nowT = time(nullptr);
     struct tm tmT = {};
-    localtime_s(&tmT, &nowT);
+    safe_localtime(&tmT, &nowT);
     std::ostringstream ossT;
     ossT << std::put_time(&tmT, "%Y-%m-%d");
     std::string todayStr = ossT.str();
